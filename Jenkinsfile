@@ -44,12 +44,13 @@ pipeline {
         stage('Health Check Backend Image') {
             steps {
                 sh """
-                    docker run --rm -d --name test-backend -p 8088:8001 ${DOCKER_IMAGE_BACKEND}:${IMAGE_TAG}
+                    # Run without port mapping to avoid conflicts
+                    docker run --rm -d --name test-backend ${DOCKER_IMAGE_BACKEND}:${IMAGE_TAG}
                     echo "Waiting 30 seconds for backend to initialize..."
                     sleep 30
                     
-                    # Health Check using curl on host
-                    if curl -f http://localhost:8088/docs; then
+                    # Health Check using wget inside the container (bypasses Jenkins networking quirks)
+                    if docker exec test-backend wget --spider -q http://localhost:8001/docs; then
                         echo "✅ Backend health check passed!"
                         docker stop test-backend
                     else
