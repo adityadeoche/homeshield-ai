@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: yourdockerhubuser/homeshield-frontend:latest
+          image: adityadeoche/homeshield-frontend:latest
           ports:
             - containerPort: 80
           resources:

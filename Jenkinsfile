@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE_BACKEND  = "yourdockerhubuser/homeshield-backend"
-        DOCKER_IMAGE_FRONTEND = "yourdockerhubuser/homeshield-frontend"
+        DOCKER_IMAGE_BACKEND  = "adityadeoche/homeshield-backend"
+        DOCKER_IMAGE_FRONTEND = "adityadeoche/homeshield-frontend"
         IMAGE_TAG = "${env.BUILD_NUMBER}"
     }
 

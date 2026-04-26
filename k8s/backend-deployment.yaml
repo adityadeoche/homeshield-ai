@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: yourdockerhubuser/homeshield-backend:latest
+          image: adityadeoche/homeshield-backend:latest
           ports:
             - containerPort: 8001
           env:
