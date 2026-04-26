@@ -87,6 +87,9 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
                     sh '''
+                        # Automatically patch KUBECONFIG to talk to Mac host from inside Docker
+                        sed -i 's/127.0.0.1/host.docker.internal/g' $KUBECONFIG
+
                         kubectl apply -f k8s/ -n homeshield --kubeconfig=$KUBECONFIG
                         kubectl set image deployment/homeshield-backend backend=$DOCKER_IMAGE_BACKEND:$IMAGE_TAG -n homeshield --kubeconfig=$KUBECONFIG
                         kubectl set image deployment/homeshield-frontend frontend=$DOCKER_IMAGE_FRONTEND:$IMAGE_TAG -n homeshield --kubeconfig=$KUBECONFIG
