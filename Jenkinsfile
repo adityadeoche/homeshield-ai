@@ -44,11 +44,20 @@ pipeline {
         stage('Health Check Backend Image') {
             steps {
                 sh """
-                    docker run --rm -d --name test-backend -p 8001:8001 \
-                        ${DOCKER_IMAGE_BACKEND}:${IMAGE_TAG}
-                    sleep 20
-                    curl -f http://localhost:8001/docs || (docker stop test-backend && exit 1)
-                    docker stop test-backend
+                    docker run --rm -d --name test-backend -p 8001:8001 ${DOCKER_IMAGE_BACKEND}:${IMAGE_TAG}
+                    echo "Waiting 30 seconds for backend to initialize..."
+                    sleep 30
+                    
+                    # Health Check using curl on host
+                    if curl -f http://localhost:8001/docs; then
+                        echo "✅ Backend health check passed!"
+                        docker stop test-backend
+                    else
+                        echo "❌ Backend health check failed! Capturing logs..."
+                        docker logs test-backend
+                        docker stop test-backend
+                        exit 1
+                    fi
                 """
             }
         }
