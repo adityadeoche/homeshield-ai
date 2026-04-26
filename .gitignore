@@ -1,0 +1,25 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# ML Models
+*.pt
+models/
+
+# Node
+node_modules/
+
+# Build files
+dist/
+build/
+
+# Env
+.env
+
+# Outputs
+outputs/
+
+# OS files
+.DS_Store
+Thumbs.db

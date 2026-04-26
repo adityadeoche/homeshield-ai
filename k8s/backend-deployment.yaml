@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homeshield-backend
+  namespace: homeshield
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: homeshield-backend
+  template:
+    metadata:
+      labels:
+        app: homeshield-backend
+    spec:
+      containers:
+        - name: backend
+          image: yourdockerhubuser/homeshield-backend:latest
+          ports:
+            - containerPort: 8001
+          env:
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: homeshield-secrets
+                  key: GEMINI_API_KEY
+          volumeMounts:
+            - name: video-storage
+              mountPath: /app/uploads
+              subPath: uploads
+            - name: video-storage
+              mountPath: /app/outputs
+              subPath: outputs
+          resources:
+            requests:
+              memory: "1500Mi"
+              cpu: "500m"
+            limits:
+              memory: "4Gi"
+              cpu: "2000m"
+          readinessProbe:
+            httpGet:
+              path: /docs
+              port: 8001
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /docs
+              port: 8001
+            initialDelaySeconds: 60
+            periodSeconds: 20
+      volumes:
+        - name: video-storage
+          persistentVolumeClaim:
+            claimName: homeshield-pvc

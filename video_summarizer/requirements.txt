@@ -1,0 +1,14 @@
+fastapi==0.103.1
+uvicorn==0.23.2
+opencv-python-headless
+ultralytics
+torch
+torchvision
+numpy
+pandas
+pillow
+moviepy
+transformers
+scikit-learn
+matplotlib
+python-multipart

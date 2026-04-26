@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homeshield-frontend
+  namespace: homeshield
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: homeshield-frontend
+  template:
+    metadata:
+      labels:
+        app: homeshield-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: yourdockerhubuser/homeshield-frontend:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 5

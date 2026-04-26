@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: video_summarizer/backend/Dockerfile
+    container_name: homeshield-backend
+    ports:
+      - "8001:8001"
+    volumes:
+      - video_uploads:/app/uploads
+      - video_outputs:/app/outputs
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    networks:
+      default:
+        aliases:
+          - backend-service
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  frontend:
+    build:
+      context: .
+      dockerfile: video_summarizer/frontend/Dockerfile
+    container_name: homeshield-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  video_uploads:
+  video_outputs:
