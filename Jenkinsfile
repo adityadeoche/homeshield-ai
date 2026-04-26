@@ -71,11 +71,11 @@ pipeline {
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
                     sh '''
-                        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin;
-                        docker push ${DOCKER_IMAGE_BACKEND}:${IMAGE_TAG};
-                        docker push ${DOCKER_IMAGE_BACKEND}:latest;
-                        docker push ${DOCKER_IMAGE_FRONTEND}:${IMAGE_TAG};
-                        docker push ${DOCKER_IMAGE_FRONTEND}:latest;
+                        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                        docker push $DOCKER_IMAGE_BACKEND:$IMAGE_TAG
+                        docker push $DOCKER_IMAGE_BACKEND:latest
+                        docker push $DOCKER_IMAGE_FRONTEND:$IMAGE_TAG
+                        docker push $DOCKER_IMAGE_FRONTEND:latest
                     '''
                 }
             }
@@ -85,11 +85,11 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
                     sh '''
-                        kubectl apply -f k8s/ -n homeshield --kubeconfig=$KUBECONFIG;
-                        kubectl set image deployment/homeshield-backend backend=${DOCKER_IMAGE_BACKEND}:${IMAGE_TAG} -n homeshield --kubeconfig=$KUBECONFIG;
-                        kubectl set image deployment/homeshield-frontend frontend=${DOCKER_IMAGE_FRONTEND}:${IMAGE_TAG} -n homeshield --kubeconfig=$KUBECONFIG;
-                        kubectl rollout status deployment/homeshield-backend -n homeshield --kubeconfig=$KUBECONFIG;
-                        kubectl rollout status deployment/homeshield-frontend -n homeshield --kubeconfig=$KUBECONFIG;
+                        kubectl apply -f k8s/ -n homeshield --kubeconfig=$KUBECONFIG
+                        kubectl set image deployment/homeshield-backend backend=$DOCKER_IMAGE_BACKEND:$IMAGE_TAG -n homeshield --kubeconfig=$KUBECONFIG
+                        kubectl set image deployment/homeshield-frontend frontend=$DOCKER_IMAGE_FRONTEND:$IMAGE_TAG -n homeshield --kubeconfig=$KUBECONFIG
+                        kubectl rollout status deployment/homeshield-backend -n homeshield --kubeconfig=$KUBECONFIG
+                        kubectl rollout status deployment/homeshield-frontend -n homeshield --kubeconfig=$KUBECONFIG
                     '''
                 }
             }
