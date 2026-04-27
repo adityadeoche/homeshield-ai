@@ -45,6 +45,12 @@ const Dashboard = () => {
                 return;
             }
 
+            if (typeof res.data === 'string' || !res.data.events) {
+                alert(`Server returned an unexpected response. This usually happens if the AI model takes too long and times out. Try a shorter video or increasing the FPS skip rate.\n\nResponse snippet: ${String(res.data).substring(0, 50)}`);
+                setLoading(false);
+                return;
+            }
+
             // Navigate to Analysis page with results
             navigate('/analysis', { state: { results: res.data, originalVideoUrl: fileUrl } });
         } catch (err) {
