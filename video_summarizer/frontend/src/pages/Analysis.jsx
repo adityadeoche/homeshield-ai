@@ -243,7 +243,7 @@ const Analysis = ({ user }) => {
                                     </div>
                                 ) : (
                                     <video
-                                        src={videoMode === "Optimized" ? (summary_video.startsWith('http') ? summary_video : `http://localhost:8001${summary_video}`) : originalVideoUrl}
+                                        src={videoMode === "Optimized" ? (summary_video.startsWith('http') ? summary_video : `${import.meta.env.VITE_API_URL || "http://localhost:8001"}${summary_video}`) : originalVideoUrl}
                                         controls
                                         autoPlay
                                         muted

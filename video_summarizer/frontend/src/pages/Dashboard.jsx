@@ -36,7 +36,8 @@ const Dashboard = () => {
             formData.append("zone_limit", 0.3);
 
             // Reverted back to localhost:8001 to resolve cross-origin preflight locks on user's current session
-            const res = await axios.post("http://localhost:8001/api/upload", formData);
+            const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8001";
+            const res = await axios.post(`${apiUrl}/api/upload`, formData);
             // Navigate to Analysis page with results
             navigate('/analysis', { state: { results: res.data, originalVideoUrl: fileUrl } });
         } catch (err) {
