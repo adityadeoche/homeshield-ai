@@ -38,6 +38,13 @@ const Dashboard = () => {
             // Reverted back to localhost:8001 to resolve cross-origin preflight locks on user's current session
             const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8001";
             const res = await axios.post(`${apiUrl}/api/upload`, formData);
+            
+            if (res.data.error) {
+                alert(`Backend Error: ${res.data.error}\nDetails: ${res.data.details}`);
+                setLoading(false);
+                return;
+            }
+
             // Navigate to Analysis page with results
             navigate('/analysis', { state: { results: res.data, originalVideoUrl: fileUrl } });
         } catch (err) {
